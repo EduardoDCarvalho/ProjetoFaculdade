@@ -109,7 +109,7 @@ CREATE TABLE frequencias (
 
 CREATE TABLE pagamentos (
     id_pagamento INT PRIMARY KEY IDENTITY(1,1),
-    formas_pagamento VARCHAR(35) NOT NULL CHECK (formas_pagamento IN ('Cartão de Crédito', 'Débito', 'Boleto', 'Dinheiro')),
+    formas_pagamento VARCHAR(35) NOT NULL CHECK (formas_pagamento IN ('CartÃ£o de CrÃ©dito', 'DÃ©bito', 'Boleto', 'Dinheiro')),
     valor DECIMAL(10, 2) NOT NULL,
     data_pagamento DATETIME NOT NULL
 );
@@ -130,6 +130,8 @@ CREATE TABLE folhas_pagamento (
     ano_referencia SMALLINT NOT NULL CHECK (ano_referencia >= 2000),
     salario_bruto DECIMAL(10,2) NOT NULL,
     descontos DECIMAL(10,2) NOT NULL,
+    Bonus DECIMAL(10,2) NOT NULL,
+    salario_liquido DECIMAL (10,2) AS (salario_bruto + bonus - desconto),
     id_pessoa INT NOT NULL,
     id_cargo INT NOT NULL,
     FOREIGN KEY (id_pagamento) REFERENCES pagamento(id_pagamento),
@@ -137,27 +139,3 @@ CREATE TABLE folhas_pagamento (
     FOREIGN KEY (id_cargo) REFERENCES cargo(id_cargo)
 );
 
-CREATE TABLE bibliotecas (
-    id_biblioteca INT PRIMARY KEY IDENTITY(1,1),
-    nome_biblioteca VARCHAR(30) NOT NULL,
-    localizacao VARCHAR(80) NOT NULL
-);
-
-CREATE TABLE livros (
-    id_livro INT PRIMARY KEY IDENTITY(1,1),
-    titulo VARCHAR(50) NOT NULL,
-    autor VARCHAR(100) NOT NULL,
-    id_biblioteca INT NOT NULL,
-    FOREIGN KEY (id_biblioteca) REFERENCES biblioteca(id_biblioteca)
-);
-
-CREATE TABLE emprestimos (
-    id_emprestimo INT PRIMARY KEY IDENTITY(1,1),
-    data_emprestimo DATETIME NOT NULL DEFAULT GETDATE(),
-    data_devolucao DATETIME NULL,
-    status_emprestimo VARCHAR(30) NOT NULL CHECK (status_emprestimo IN ('Empretado', 'Devolvido')),
-    id_livro INT NOT NULL,
-    id_pessoa INT NOT NULL,
-    FOREIGN KEY (id_livro) REFERENCES livro(id_livro),
-    FOREIGN KEY (id_pessoa) REFERENCES pessoa(id_pessoa) 
-);
